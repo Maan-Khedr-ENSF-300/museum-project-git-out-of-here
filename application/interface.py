@@ -10,7 +10,7 @@ cnx = mysql.connector.connect(
 cur = cnx.cursor()
 
 # login
-user = input('Username: ')
+username = input('Username: ')
 password = input('Password: ')
 
 
