@@ -49,6 +49,40 @@ def modify_tuple():
         cnx.commit()   
 
 def browse_info():
+    mycursor = cnx.cursor()
+    selection_string = "SELECT * FROM " 
+    user_input = int(input("Display Data from: \n 1 - Art Pieces on Display \n 2 - Exhibits \n 3 - Paintings at Museum \n 4 - Sculptures at Museum \n 5 - Other types of pieces \n 6 - Artists at Museum \n 7 - Permanant collections at museum \n 8 - relative collections at museum \n 9 - Borrowed collections \n 0 - Quit \n"))
+    while(user_input != 0):
+        if(user_input == 1):
+            case = "ART_OBJECTS"
+        elif(user_input == 2):
+            case = "EXHIBITIONS"
+        elif(user_input == 3):
+            case = "PAINTINGS"
+        elif(user_input == 4):
+            case = "SCULPTURE_STATUE"
+        elif(user_input == 5):
+            case = "OTHER"
+        elif(user_input == 6):
+            case = "ARTISTS"
+        elif(user_input == 7):
+            case = "PERMANENT_COLLECTION"
+        elif(user_input == 8):
+            case = "COLLECTIONS"
+        elif(user_input == 9):
+            case = "BORROWED"
+        elif(user_input == 0):
+            break
+
+        selection_string = selection_string + case
+        mycursor.execute(selection_string)
+        myresult = mycursor.fetchall()
+        print("Table: ", case)
+        for x in myresult:
+            print(x)
+        selection_string = "SELECT * FROM "
+        user_input = int(input("Display Data from: \n 1 - Art Pieces on Display \n 2 - Exhibits \n 3 - Paintings at Museum \n 4 - Sculptures at Museum \n 5 - Other types of pieces \n 6 - Artists at Museum \n 7 - Permanant collections at museum \n 8 - relative collections at museum \n 9 - Borrowed collections \n 0 - Quit \n"))
+
 
 
 cnx = mysql.connector.connect(
