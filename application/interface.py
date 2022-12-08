@@ -2,23 +2,24 @@ import mysql.connector
 
 def modify_tuple():
     table = input('Please enter the name of the table you would like to modify the information of: ')
-    cur.execute('SELECT * FROM %s', table)
+    cur.execute('SELECT * FROM %s' %(table))
     column_names = cur.column_names
 
     rows = cur.fetchall()
     print('Current information in table:\n', rows) # print current information for user
 
-    tuple_option = input('Please enter:\n 1. Add a tuple\n2. Modify a tuple\n3. Delete a tuple:\n')
+    tuple_option = input('Please enter:\n 1. Add a tuple (only works for Artists, Exhibitions, Collections) \n2. Modify a tuple\n3. Delete a tuple (only works for borrowed,permanent collection, other, sculpture, paintings, art objects, ):\n')
     if tuple_option == '1': # add tuple
-        insert_table = ("insert into %s"
-                        "values (", table)
-        for attribute in column_names:
-            insert_table += '%s, '
+        insert_table = "INSERT INTO %s values (" % (table)
+        print('Please enter the following attributes, separated by a comma: ', column_names)
+        table_data = input("list here, if it is a string please include it in ' ':")
+        table_data = [str(x) for x in table_data.split(",")]
+        insert_table = insert_table + table_data[0]
+        for x in range(1,len(table_data)):
+            insert_table = insert_table +',' + table_data[x]
         insert_table += ')'
-
-        table_data = input('Please enter the following attributes, separated by a comma %s: ', column_names)
-        table_data = tuple(str(x) for x in table_data.split(","))
-        cur.execute(insert_table, table_data)
+        print(insert_table)
+        cur.execute(insert_table)
         cnx.commit()
 
     elif tuple_option == '2': # modify tuple
@@ -41,11 +42,11 @@ def modify_tuple():
         cnx.commit()
 
     elif tuple_option == '3': # delete tuple
-        del_info = str(input('Please enter the %s of the %s table you wish to delete from the database: ', column_names[0], table))
+        del_info = str(input('Please enter the %s of the %s table you wish to delete from the database: ' %(column_names[0], table)))
         cur.execute(''' 
                     DELETE FROM %s
                     WHERE %s = %s
-                    ''', table, column_names[0], del_info)
+                    '''% (table, column_names[0], del_info))
         cnx.commit()   
 
 def browse_info():
@@ -83,13 +84,12 @@ def browse_info():
         selection_string = "SELECT * FROM "
         user_input = int(input("Display Data from: \n 1 - Art Pieces on Display \n 2 - Exhibits \n 3 - Paintings at Museum \n 4 - Sculptures at Museum \n 5 - Other types of pieces \n 6 - Artists at Museum \n 7 - Permanant collections at museum \n 8 - relative collections at museum \n 9 - Borrowed collections \n 0 - Quit \n"))
 
-
-
 cnx = mysql.connector.connect(
-    user = 'root', 
-    password = 'Zafa9876$',
-    host = '127.0.0.1',
-    database = 'art')
+    host = "localhost",
+    user = "root", 
+    passwd = "102Candle", 
+    database = "ART",
+    auth_plugin = "mysql_native_password")
 
 cur = cnx.cursor()
 
@@ -102,6 +102,7 @@ print('Welcome to the ENSF 300 ART Museum Project Database. Please login below:'
 status = True
 
 while status == True:
+    print("to exit enter 0 for username and password")
     username = input('Username: ')
     password = input('Password: ')
 
@@ -110,38 +111,39 @@ while status == True:
         option = input('Please select an option:\n1. Add User\n2. Edit User\n3. Block User\n4. Modify Database\n')
         
         if option == '1': # add users
-            insert_user = ("insert into users"
-                           "values (%s, %s, %s)")
-            user_data = input('Please enter the Username, Password, and Account Type (admin, data entry, end) separated by a comma:')
-            user_data = tuple(str(x) for x in user_data.split(","))
-            cur.execute(insert_user, user_data)
+            user_data = str(input('Please enter the Username, Password, and Account Type (admin, data entry, end) separated by a comma:'))
+            user_data = [str(x) for x in user_data.split(",")]
+            insert_user = "INSERT INTO USERS VALUES ('%s', '%s', '%s')" % (user_data[0], user_data[1], user_data[2])
+            cur.execute(insert_user)
             cnx.commit()
 
         elif option == '2': # edit users
             username1 = str(input('Please enter the username of the user file you would like to update: '))
             up_username = str(input('Enter your updated username: '))
             up_password = str(input('Enter your updated password: '))
-            up_acc_type = str(input('Enter your updated account type (admin, data entry, end): '))
+            up_acc_type = str(input('Enter your updated account type (admin, dataentry, end): '))
 
             cur.execute('''
                         UPDATE users
-                        SET username = %s, password = %s, account_type = %s
-                        WHERE username = %s
-                        ''', up_username, up_password, up_acc_type , username1)
+                        SET username = '%s', password_ = '%s', account_type = '%s'
+                        WHERE username = '%s'
+                        '''% (up_username, up_password, up_acc_type , username1)) 
             cnx.commit()
 
         elif option == '3': # block users
             del_user = str(input('Please enter the username of the user you wish to block from the database: '))
+            cur.execute()
             cur.execute(''' 
                         DELETE FROM users
-                        WHERE username = %s
-                        ''', del_user)
+                        WHERE username = '%s'
+                        '''% (del_user)) 
             cnx.commit()
 
         elif option == '4': # change database
             table = input('Please enter the name of the table you would like to modify: ')
-            modify = input('Please select and option: \n1. Modify an attribute of a table\n2. Modify table constraints\n3. Modify table information\n')
-            cur.execute('SELECT * FROM %s', table)
+            modify = input('Please select an option: \n1. Modify an attribute of a table\n2. Modify table constraints\n3. Modify table information\n')
+            cur.execute('SELECT * FROM %s' % (table))
+            cur.fetchall()
 
             if modify == '1': # modify attribute in table
                 columns = cur.column_names
@@ -154,23 +156,20 @@ while status == True:
                         cur.execute(''' 
                                     ALTER TABLE %s
                                     ADD %s
-                                    FIRST
-                                    ''', table, new_col)
-                        cur.commit()
+                                    FIRST;
+                                    '''% (table, new_col))
                     elif location == '2': 
                         new_after = input('After which attribute should this new attribute be inserted: ')
                         cur.execute(''' 
                                     ALTER TABLE %s
                                     ADD %s
-                                    AFTER %s
-                                    ''', table, new_col, new_after)
-                        cur.commit()
+                                    AFTER %s;
+                                    '''% (table, new_col, new_after))
                     elif location == '3': 
                         cur.execute(''' 
                                     ALTER TABLE %s
-                                    ADD %s
-                                    ''', table, new_col)
-                        cur.commit()
+                                    ADD %s;
+                                    '''%(table, new_col))
                 elif choice == '2': # modify attribute
                     col_modify = input('Enter the name of the attribute you wish to modify: ')
                     col_mod_def = input('Enter this attribute\'s new definition (EX: VARCHAR(100)): ')
@@ -181,7 +180,7 @@ while status == True:
                                         ALTER TABLE %s
                                         MODIFY %s %s
                                         FIRST
-                                        ''', table, col_modify, col_mod_def)
+                                        '''%(table, col_modify, col_mod_def))
                             cur.commit()
                         elif location2 == '2': # between columns
                             new_after2 = input('After which attribute should this attribute be repositioned: ')
@@ -189,26 +188,26 @@ while status == True:
                                         ALTER TABLE %s
                                         MODIFY %s %s
                                         AFTER %s
-                                        ''', table, col_modify, col_mod_def, new_after2)
+                                        '''% (table, col_modify, col_mod_def, new_after2))
                             cur.commit()
                         elif location2 == '3': # end
                             cur.execute(''' 
                                         ALTER TABLE %s
                                         MODIFY %s %s
-                                        ''', table, col_modify, col_mod_def)
+                                        '''%(table, col_modify, col_mod_def))
                             cur.commit()
                     else: 
                         cur.execute(''' 
                                     ALTER TABLE %s
                                     MODIFY %s %s
-                                    ''', table, col_modify, col_mod_def)
+                                    '''%(table, col_modify, col_mod_def))
                         cur.commit()
                 elif choice == '3': # delete attribute
                     col_delete = input('Enter the name of the attribute you wish to delete: ')
                     cur.execute(''' 
                                 ALTER TABLE %s
                                 DROP COLUMN %s
-                                ''', table, col_delete)
+                                '''%(table, col_delete))
                     cur.commit()
 
             elif modify == '2': # modify table constraints
@@ -220,7 +219,7 @@ while status == True:
                     cur.execute(''' 
                                 ALTER TABLE %s,
                                 RENAME CONSTRAINT %s TO %s
-                                ''', table, old_constraint_name, new_constraint_name)
+                                '''%(table, old_constraint_name, new_constraint_name))
                     cur.commit()
                 elif mod_constraint == '2': # modify properties of constraint
                     pick = input('Please enter 1 if you wish to add a constraint, or 2 to delete a constraint: ')
@@ -232,7 +231,7 @@ while status == True:
                             cur.execute('''
                                         ALTER TABLE %s
                                         ADD CONSTRAINT %s PRIMARY KEY (%s) 
-                                        ''', table, primary_name, primary_col)
+                                        '''%(table, primary_name, primary_col))
                             cur.commit()
                         elif type_constraint == 'Unique': # add unique key
                             unique_name = input('Enter the name of the Unique Key: ')
@@ -240,14 +239,14 @@ while status == True:
                             cur.execute('''
                                         ALTER TABLE %s
                                         ADD CONSTRAINT %s UNIQUE(%s) 
-                                        ''', table, unique_name, unique_col)
+                                        '''% (table, unique_name, unique_col))
                             cur.commit()
                     elif pick == '2': #delete constraint
                         del_constraint = input('Enter the name of the constraint you wish to delete: ')
                         cur.execute(''' 
                                     ALTER TABLE %s
                                     DROP CONSTRAINT %s
-                                    ''', table, del_constraint)
+                                    '''% (table, del_constraint))
 
             elif modify == '3': # modify tuple (add/delete/modify)
                 modify_tuple()
