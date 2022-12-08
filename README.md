@@ -9,9 +9,17 @@ Kenzy: SQL Querries and Database creation
 
 * ALL did debugging
 
-## Organization:
-- code folder: contains your main python application code
-- sql scripts folder: contains all sql scripts required (database creation and initialization, sql script with query tasks in the handout, etc...)
-- database design folder: EERD and relational schema
-- optional data folder: has data files that you can sue to load data to your application if you use this optional implementation requirement
+## NOTES:
+- please download the database and enter the user and passwd for your own personal SQL plug. Make sure that the database is imported into your localhost on whatever SQL interface you may be using, use the below as reference
 
+    host = "localhost",
+    user = "root", 
+    passwd =  ****** ur password 
+    database = "ART",
+    auth_plugin = "mysql_native_password"
+
+- Note that if any constraints are listed that is because of the parent and child constraints and would require upper level knowledge to elimante
+- user names to work around: 
+       ('zahwa123', 'sklmP123', 'admin'),
+		   ('Kenzy_h','KH!@#',  'dataentry'),
+		   ('Nessm_M6789', 'NLOK1gh', 'end')
