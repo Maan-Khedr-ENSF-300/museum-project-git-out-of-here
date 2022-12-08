@@ -1,4 +1,3 @@
-1.
 SELECT * FROM BORROWED;
 SELECT * FROM USERS;
 SELECT * FROM SCULPTURE_STATUE;
@@ -9,18 +8,48 @@ SELECT * FROM ARTISTS;
 SELECT * FROM ART_OBJECTS;
 /*The key attribute in ART_OBJECTS is id_no, which is a foreighn key in all the other tables except in EXHIBITIONS, ARTISTS and COLLECTIONS. BORROWED has another foreign key which is Collection_borrowed that links it too COLLECTION. EXHIBITION has a primary key exhib_id that is a foreign key in ART_OBJECTS. Likewise, ARTISTS a primary key Artist_id that is a foreign key in ART_OBJECTS*/
 
-2.
+
 SELECT  id_no, title, year_,exhibnum
 FROM ART_OBJECTS 
 WHERE (year_ > 1750 ) AND (exhibnum>=3);
-3.
+
+
+SELECT DISTINCT atrist_id, Name_A , DateBorn, Date_died 
+FROM COLLECTIONS AS C, BORROWED AS B, ART_OBJECTS AS AO, ARTISTS AS A
+WHERE C.collec_name=B.collection_borrowed AND B.BID_no=AO.id_no AND AO.atrist_id = A.Artist_id AND C.collec_name='Département des Peintures'
+ORDER BY DateBorn;
+
+
+
 SELECT *
 FROM  ART_OBJECTS AS AO, PAINTINGS AS P, ARTISTS AS A
 WHERE P.PID_no=AO.id_no AND AO.atrist_id = A.Artist_id AND A.Name_A ='Joseph Ducreux' AND AO.artist = 'Joseph Ducreux'  IN( 
 	SELECT PID_no
 	FROM  PAINTINGS AS P);
-  
-4.  
-SELECT *
+	
+
+
+
+
+
+
+
+
+SELECT*
 FROM (ART_OBJECTS  JOIN  OTHER  ON OTHER.Oid_no = ART_OBJECTS.id_no)
 WHERE(type_ = 'Pottery' AND year_=1850);
+
+
+
+
+   	        
+            
+   
+             
+              
+     
+                
+  	
+  	   
+    
+		
