@@ -1,9 +1,11 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=9297229&assignment_repo_type=AssignmentRepo)
 # Museum-Project
-## To Do list:
-- modify this file to include your group members information and tasks assigned per each
-- modify this file to include any notes on how to use and run the program
-- include any features you have added beyond the minimum requirements in a features list
+## Organization of tasks:
+Nessma: Database modification, ER & Relational Diagram, and Browsing Interface
+
+Zahwa: Python interface, Data Entry Interface, and Admin Interface
+
+Kenzy: SQL Querries and Database creation
 
 ## Organization:
 - code folder: contains your main python application code
